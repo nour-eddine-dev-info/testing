@@ -12,6 +12,26 @@ jobs:
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           sudo docker image prune --all --force
           sudo docker builder prune -a
+              # 1. Clean up APT cache
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+      
+          # 2. Remove hosted toolcache entries you don’t need
+          sudo rm -rf /opt/hostedtoolcache/Node*
+          sudo rm -rf /opt/hostedtoolcache/Go*
+          sudo rm -rf /opt/hostedtoolcache/Ruby*
+          sudo rm -rf /opt/hostedtoolcache/Gradle*
+          sudo rm -rf /opt/hostedtoolcache/Maven*
+          # (Keep /opt/hostedtoolcache/Python* if you ever need runner‑side Python)
+      
+          # 3. Remove any stopped Docker containers & volumes
+          docker container prune --force
+          docker volume prune --force
+      
+          # 4. Final sweep of Docker builder & system
+          docker builder prune --all --force
+          docker system prune --all --volumes --force
+    
       - run: df -h
 
       - name: Checkout
