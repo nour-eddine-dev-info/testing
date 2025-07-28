@@ -5,53 +5,15 @@ jobs:
   build:
     name: Build my artifact
     runs-on: ubuntu-latest
-
-    # Define environment variables to hold common parameters
-    env:
-      ROOT_RESERVE_MB: 512
-      SWAP_SIZE_MB: 1024
-      REMOVE_DOTNET: 'true'
-      REMOVE_ANDROID: 'false'
-      REMOVE_HASKELL: 'false'
-      REMOVE_CODEQL: 'false'
-      REMOVE_DOCKER_IMAGES: 'false'
-      TEMP_RESERVE_MB: 100
-      OVERPROVISION_LVM: 'false'
-      BUILD_MOUNT_PATH: ${{ github.workspace }}
-      PV_LOOP_PATH: '/pv.img'
-      TMP_PV_LOOP_PATH: '/mnt/tmp-pv.img'
-
     steps:
-      # Maximize build space with custom parameters
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
-          root-reserve-mb: ${{ env.ROOT_RESERVE_MB }}
-          swap-size-mb: ${{ env.SWAP_SIZE_MB }}
-          remove-dotnet: ${{ env.REMOVE_DOTNET }}
-          remove-android: ${{ env.REMOVE_ANDROID }}
-          remove-haskell: ${{ env.REMOVE_HASKELL }}
-          remove-codeql: ${{ env.REMOVE_CODEQL }}
-          remove-docker-images: ${{ env.REMOVE_DOCKER_IMAGES }}
-          temp-reserve-mb: ${{ env.TEMP_RESERVE_MB }}
-          overprovision-lvm: ${{ env.OVERPROVISION_LVM }}
-          build-mount-path: ${{ env.BUILD_MOUNT_PATH }}
-          pv-loop-path: ${{ env.PV_LOOP_PATH }}
-          tmp-pv-loop-path: ${{ env.TMP_PV_LOOP_PATH }}
-
-      # Checkout the repository code
+          root-reserve-mb: 512
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Show available disk space for troubleshooting
-      - name: Show disk space
+      - name: Build
         run: |
           echo "Free space:"
           df -h
-
-      # Add your build steps here, for example:
-      - name: Build the project
-        run: |
-          echo "Building the project..."
-          # Add your build commands here
-          # For example: make, npm run build, etc.
